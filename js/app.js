@@ -1,37 +1,24 @@
-// private api 
-// const api ={
-//     key: '2228e20b0da454c04d5564b64fb05d77',
-// }
+const API_key = `2228e20b0da454c04d5564b64fb05d77`;
+const searchTemperature = () => {
+    const city = document.getElementById('city-name').value;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}&units=metric`;
+    console.log(url);
 
-const searchBtn = () => {
-    const inputField = document.getElementById('input-btn');
-    const inputText = inputField.value;
-    // console.log(inputText);
-    inputField.value='';
-
-    const apiKey= '2228e20b0da454c04d5564b64fb05d77';
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${inputText}&appid=${apiKey}`;
-
-    // console.log(url);
     fetch(url)
     .then(res => res.json())
-    .then(data => {
-        const icons = data.weather[0].icon;
-        const div = document.createElement('div');
-        div.innerHTML=`
-        <img id="icon" src="${icons}." alt="">
-        `
-        // console.log(icons);
-        const cityName = data.name;
-        const tem = data.main.temp;
-        const temp = tem - 273.15;
-        const description = data.weather[0].description;
+    .then(data => displayTemperature(data));
+}
 
-        // document.getElementById('icon').innerHTML = icons;
-        document.getElementById('city').innerText = cityName;
-        document.getElementById('temp').innerText = temp.toFixed(2);
-        document.getElementById('description').innerText = description;
-    })
-    // .catch(res => alert('Please type valid City'))
+const setInnerText = (id, text) => {
+    document.getElementById(id).innerText = text;
+}
 
+const displayTemperature = temperature => {
+    setInnerText('city', temperature.name);
+    setInnerText('temp', temperature.main.temp);
+    setInnerText('condition', temperature.weather[0].main);
+    // set weather icon 
+    const url = `http://openweathermap.org/img/wn/${temperature.weather[0].icon}@2x.png`;
+    const imgIcon = document.getElementById('icon');
+    imgIcon.setAttribute('src', url);
 }
